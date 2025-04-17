@@ -150,7 +150,6 @@
  *****************************************************************************/
 
 #include "acpidump.h"
-#include "source/components/utilities/utcksum.c"
 
 /* Local prototypes */
 
