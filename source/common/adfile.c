@@ -207,7 +207,6 @@ AdGenerateFilename (
     }
 
     FilenameBuf[i] = 0;
-    strcat (FilenameBuf, FILE_SUFFIX_BINARY_TABLE);
     return (FilenameBuf);
 }
 

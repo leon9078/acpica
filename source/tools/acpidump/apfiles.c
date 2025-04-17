@@ -250,22 +250,20 @@ ApOpenOutputFile (
  * FUNCTION:    ApWriteToBinaryFile
  *
  * PARAMETERS:  Table               - ACPI table to be written
- *              Instance            - ACPI table instance no. to be written
  *
  * RETURN:      Status
  *
- * DESCRIPTION: Write an ACPI table to a binary file. Builds the output
- *              filename from the table signature.
+ * DESCRIPTION: Write an ACPI table to a binary file.
  *
  ******************************************************************************/
 
 int
 ApWriteToBinaryFile (
-    ACPI_TABLE_HEADER       *Table,
-    UINT32                  Instance)
+    ACPI_TABLE_HEADER       *Table)
 {
-    char                    Filename[ACPI_NAMESEG_SIZE + 16] ACPI_NONSTRING;
-    char                    InstanceStr [16];
+    static unsigned         Index = 0;
+    char                    Filename[12];
+    CHAR8                   *Signature;
     ACPI_FILE               File;
     ACPI_SIZE               Actual;
     UINT32                  TableLength;
@@ -275,32 +273,22 @@ ApWriteToBinaryFile (
 
     TableLength = ApGetTableLength (Table);
 
-    /* Construct lower-case filename from the table local signature */
-
-    if (ACPI_VALIDATE_RSDP_SIG (Table->Signature))
-    {
-        ACPI_COPY_NAMESEG (Filename, ACPI_RSDP_NAME);
-    }
-    else
-    {
-        ACPI_COPY_NAMESEG (Filename, Table->Signature);
-    }
-
-    Filename[0] = (char) tolower ((int) Filename[0]);
-    Filename[1] = (char) tolower ((int) Filename[1]);
-    Filename[2] = (char) tolower ((int) Filename[2]);
-    Filename[3] = (char) tolower ((int) Filename[3]);
-    Filename[ACPI_NAMESEG_SIZE] = 0;
-
-    /* Handle multiple SSDTs - create different filenames for each */
-
-    if (Instance > 0)
-    {
-        snprintf (InstanceStr, sizeof (InstanceStr), "%u", Instance);
-        strcat (Filename, InstanceStr);
-    }
-
-    strcat (Filename, FILE_SUFFIX_BINARY_TABLE);
+    Signature = (CHAR8 *)&Table->Signature;
+    
+    Index = Index % 100;
+    Filename[0] = (char) ('0' + Index / 10);
+    Filename[1] = (char) ('0' + Index % 10);
+    Filename[2] = '-';
+    Filename[3] = Signature[0];
+    Filename[4] = Signature[1];
+    Filename[5] = Signature[2];
+    Filename[6] = Signature[3];
+    Filename[7] = '.';
+    Filename[8] = 'a';
+    Filename[9] = 'm';
+    Filename[10] = 'l';
+    Filename[11] = '\0';
+    Index++;
 
     if (Gbl_VerboseMode)
     {

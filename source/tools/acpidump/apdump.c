@@ -150,7 +150,7 @@
  *****************************************************************************/
 
 #include "acpidump.h"
-
+#include "source/components/utilities/utcksum.c"
 
 /* Local prototypes */
 
@@ -325,7 +325,7 @@ ApDumpTableBuffer (
 
     if (Gbl_BinaryMode)
     {
-        return (ApWriteToBinaryFile (Table, Instance));
+        return (ApWriteToBinaryFile (Table));
     }
 
     /*

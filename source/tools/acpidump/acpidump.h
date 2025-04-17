@@ -243,8 +243,7 @@ ApOpenOutputFile (
 
 int
 ApWriteToBinaryFile (
-    ACPI_TABLE_HEADER       *Table,
-    UINT32                  Instance);
+    ACPI_TABLE_HEADER       *Table);
 
 ACPI_TABLE_HEADER *
 ApGetTableFromFile (
